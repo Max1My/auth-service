@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "auth-service/pkg/auth;auth";
+
+service Auth {
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc GetRefreshToken (GetRefreshTokenRequest) returns (GetRefreshTokenResponse);
+  rpc GetAccessToken (GetAccessTokenRequest) returns (GetAccessTokenResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc AuthenticateTelegramUser (AuthenticateTelegramUserRequest) returns (AuthenticateTelegramUserResponse);
+  rpc ConfirmEmail(ConfirmEmailRequest) returns (ConfirmEmailResponse);
+  rpc SendConfirmationEmail(SendConfirmationEmailRequest) returns (SendConfirmationEmailResponse);
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message LoginResponse {
+  string refresh_token = 1;
+}
+
+message GetRefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message GetRefreshTokenResponse {
+  string refresh_token = 1;
+}
+
+message GetAccessTokenRequest {
+  string refresh_token = 1;
+}
+
+message GetAccessTokenResponse {
+  string access_token = 1;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message RegisterResponse {
+  string refresh_token = 1;
+}
+
+message AuthenticateTelegramUserRequest {
+  int64 telegram_id = 1;
+}
+
+message AuthenticateTelegramUserResponse {
+  string refresh_token = 1;
+}
+
+message ConfirmEmailRequest {
+  string token = 1; // Токен, отправленный на почту для подтверждения
+}
+
+message ConfirmEmailResponse {
+  bool success = 1; // Успех операции (true, если почта подтверждена)
+  string message = 2; // Сообщение об успешности или ошибке
+}
+
+message SendConfirmationEmailRequest {
+  string email = 1;
+}
+
+message SendConfirmationEmailResponse {
+  bool send = 1;
+}

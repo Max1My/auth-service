@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  grpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc
+    ports:
+      - "50051:50051"
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:13
+    restart: always
+    ports:
+      - "54321:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${PG_DATABASE_NAME}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+
+volumes:
+  postgres-data:

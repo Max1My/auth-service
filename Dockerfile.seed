@@ -1,0 +1,23 @@
+# Используем базовый образ Go
+FROM golang:1.20-alpine AS builder
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем все файлы проекта
+COPY . .
+
+# Устанавливаем зависимости и билдим проект
+RUN go mod download
+RUN go build -o /seed ./cmd/seed
+
+# Устанавливаем образ для запуска
+FROM alpine:latest
+
+WORKDIR /root/
+
+# Копируем бинарник из предыдущего контейнера
+COPY --from=builder /seed .
+
+# Запуск seed
+CMD ["./seed"]
